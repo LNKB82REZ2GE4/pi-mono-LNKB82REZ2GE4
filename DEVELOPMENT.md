@@ -58,33 +58,52 @@ git merge upstream/main
 
 ## Plugin Forks (`~/pi-plugins/`)
 
-Each plugin fork has:
+All installed plugins have been forked to `LNKB82REZ2GE4` on GitHub and cloned locally. Each has:
 - `origin` → your GitHub fork (fetch + push)
 - `upstream` → the original author's repo (fetch only)
 
-### pi-messenger-bridge
+| Local dir | npm package | Upstream |
+|---|---|---|
+| `pi-annotate` | `pi-annotate` | nicobailon/pi-annotate |
+| `pi-ask-tool` | `pi-ask-tool-extension` | devkade/pi-ask-tool |
+| `pi-doom` | `pi-doom` | badlogic/pi-doom |
+| `pi-extensions` | `@tmustier/pi-files-widget`, `@tmustier/extending-pi` | tmustier/pi-extensions |
+| `pi-extension-settings` | `@juanibiapina/pi-extension-settings` | juanibiapina/pi-extension-settings |
+| `pi-extmgr` | `pi-extmgr` | ayagmar/pi-extmgr |
+| `pi-gitnexus` | `pi-gitnexus` | tintinweb/pi-gitnexus |
+| `pi-mermaid` | `pi-mermaid` | Gurpartap/pi-mermaid |
+| `pi-messenger-bridge` | *(local path)* | tintinweb/pi-messenger-bridge |
+| `pi-nes` | `@tmustier/pi-nes` | tmustier/pi-nes |
+| `pi-packages` | `@benvargas/pi-antigravity-image-gen` | ben-vargas/pi-packages |
+| `pi-peon-ping` | `pi-peon-ping` | joshuadavidthomas/pi-peon-ping |
+| `pi-plan` | `@devkade/pi-plan` | devkade/pi-plan |
+| `pi-powerbar` | `@juanibiapina/pi-powerbar` | juanibiapina/pi-powerbar |
+| `pi-powerline-footer` | `pi-powerline-footer` | nicobailon/pi-powerline-footer |
+| `pi-smart-sessions` | `pi-smart-sessions` | HazAT/pi-smart-sessions |
+| `pi-theme-jellybeans` | `@aliou/pi-theme-jellybeans` | aliou/pi-theme-jellybeans |
+| `pi-tmux-window-name` | `pi-tmux-window-name` | default-anton/pi-tmux-window-name |
+| `pi-tokyonight` | `@juanibiapina/pi-tokyonight` | juanibiapina/pi-tokyonight |
+| `pi-web-access` | `pi-web-access` | nicobailon/pi-web-access |
+| `plannotator` | `@plannotator/pi-extension` *(local path)* | backnotprop/plannotator |
 
+### Normal workflow — using npm packages (no local changes needed)
+
+Most plugins are loaded from npm in `settings.json` as `npm:package-name`. You don't need to do anything with the local clones unless you want to modify a plugin. Update all npm plugins with:
 ```bash
-cd ~/pi-plugins/pi-messenger-bridge
-
-# Build after changes
-npm run build
-
-# Install modified version into global pi
-npm install -g .
+pi ext update
 ```
 
-### plannotator (@plannotator/pi-extension)
+### Modifying a plugin locally
 
-```bash
-cd ~/pi-plugins/plannotator
+1. Make changes in `~/pi-plugins/<plugin>/`
+2. Build it: `cd ~/pi-plugins/<plugin> && npm install && npm run build`
+3. Switch `settings.json` from `npm:package-name` to `/home/jake/pi-plugins/<plugin>` for that plugin
+4. Restart pi — it will load your local build
+5. When happy, push to your fork and optionally publish to npm
 
-# The pi extension lives in apps/pi-extension
-cd apps/pi-extension
-npm install && npm run build  # if applicable
-```
+### Switching back to npm version
 
-The extension is loaded by pi via an absolute path in `~/.pi/agent/settings.json`.
+Change the entry in `settings.json` back from the absolute path to `npm:package-name`.
 
 ### Pull upstream changes into a plugin fork
 
@@ -96,20 +115,33 @@ git merge upstream/main
 git push origin main
 ```
 
+### pi-messenger-bridge (already local)
+
+Loaded from local path — built and active. After changes:
+```bash
+cd ~/pi-plugins/pi-messenger-bridge && npm run build
+# No settings.json change needed, already on local path
+```
+
+### plannotator (@plannotator/pi-extension)
+
+The pi extension lives in `apps/pi-extension` within the monorepo. Loaded from local path. After changes:
+```bash
+cd ~/pi-plugins/plannotator/apps/pi-extension
+npm install && npm run build  # if applicable
+```
+
 ## Settings (`~/.pi/agent/settings.json`)
 
 Plugin load order in `packages` array:
-1. `npm:package-name` — stable npm installs, auto-updated by `pi ext update`
-2. Absolute paths — local forks from `~/pi-plugins/`, built locally
-3. GitHub URLs — avoid; use local clones instead
+1. `npm:package-name` — stable npm installs, updated by `pi ext update`
+2. Absolute paths (`/home/jake/pi-plugins/...`) — local forks, built locally
+3. GitHub URLs — avoid; prefer local clones instead
 
 ## Adding a New Plugin Fork
 
-1. Fork the plugin on GitHub to `LNKB82REZ2GE4/<plugin-name>`
-2. Clone it: `git clone https://github.com/LNKB82REZ2GE4/<plugin-name> ~/pi-plugins/<plugin-name>`
-3. Add upstream: `git -C ~/pi-plugins/<plugin-name> remote add upstream <original-url>`
-4. Build it: `cd ~/pi-plugins/<plugin-name> && npm install && npm run build`
-5. Add an absolute path entry to `~/.pi/agent/settings.json`:
-   ```json
-   "/home/jake/pi-plugins/<plugin-name>"
-   ```
+1. Fork on GitHub: `gh repo fork <owner>/<repo> --clone=false`
+2. Clone: `git clone https://github.com/LNKB82REZ2GE4/<repo> ~/pi-plugins/<repo>`
+3. Add upstream: `git -C ~/pi-plugins/<repo> remote add upstream https://github.com/<owner>/<repo>.git`
+4. Build: `cd ~/pi-plugins/<repo> && npm install && npm run build`
+5. If actively modifying, switch `settings.json` to use the absolute path
