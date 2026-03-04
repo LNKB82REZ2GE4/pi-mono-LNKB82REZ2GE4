@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ### Added
 
 - Added an experimental built-in memory system for coding-agent sessions (feature-flagged via `memory.enabled`) with human-editable Markdown storage, review queue, semantic search, auto-import from session history, and scoped context injection.
@@ -24,6 +25,12 @@
 - Default resource loading now includes built-in extension factories from core settings, enabling first-party features such as memory without external extension installation.
 - Scope parsing now accepts "user" as an alias for "person" scope type.
 =======
+=======
+### Fixed
+
+- Fixed IME hardware cursor positioning in the custom extension editor (`ctx.ui.editor()` / extension editor dialog) by propagating focus to the internal `Editor`, preventing the terminal cursor from getting stuck at the bottom-right during composition.
+
+>>>>>>> upstream/main
 ## [0.55.4] - 2026-03-02
 
 ### New Features
