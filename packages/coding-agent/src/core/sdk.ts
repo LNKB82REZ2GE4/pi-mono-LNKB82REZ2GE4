@@ -292,7 +292,7 @@ export async function createAgentSession(options: CreateAgentSessionOptions = {}
 			tools: [],
 		},
 		convertToLlm: convertToLlmWithBlockImages,
-		onPayload: async (payload, _model) => {
+		onPayload: async (payload, _model: Model<any>) => {
 			const runner = extensionRunnerRef.current;
 			if (!runner?.hasHandlers("before_provider_request")) {
 				return payload;
