@@ -432,6 +432,7 @@ export class AuthStorage {
 	 * 5. Fallback resolver (models.json custom providers)
 	 */
 	async getApiKey(providerId: string): Promise<string | undefined> {
+		this.reload();
 		const resolvedProviderId = this.resolveProviderId(providerId);
 
 		// Runtime override takes highest priority
