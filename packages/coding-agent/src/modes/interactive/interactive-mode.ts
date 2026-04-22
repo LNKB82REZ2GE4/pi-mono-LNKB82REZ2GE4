@@ -2658,6 +2658,7 @@ export class InteractiveMode {
 									content.arguments,
 									{
 										showImages: this.settingsManager.getShowImages(),
+										imageWidthCells: this.settingsManager.getImageWidthCells(),
 									},
 									this.getRegisteredToolDefinition(content.name),
 									this.ui,
@@ -2726,6 +2727,7 @@ export class InteractiveMode {
 						event.args,
 						{
 							showImages: this.settingsManager.getShowImages(),
+							imageWidthCells: this.settingsManager.getImageWidthCells(),
 						},
 						this.getRegisteredToolDefinition(event.toolName),
 						this.ui,
@@ -3056,7 +3058,10 @@ export class InteractiveMode {
 							content.name,
 							content.id,
 							content.arguments,
-							{ showImages: this.settingsManager.getShowImages() },
+							{
+								showImages: this.settingsManager.getShowImages(),
+								imageWidthCells: this.settingsManager.getImageWidthCells(),
+							},
 							this.getRegisteredToolDefinition(content.name),
 							this.ui,
 							this.sessionManager.getCwd(),
@@ -3675,6 +3680,7 @@ export class InteractiveMode {
 				{
 					autoCompact: this.session.autoCompactionEnabled,
 					showImages: this.settingsManager.getShowImages(),
+					imageWidthCells: this.settingsManager.getImageWidthCells(),
 					autoResizeImages: this.settingsManager.getImageAutoResize(),
 					blockImages: this.settingsManager.getBlockImages(),
 					enableSkillCommands: this.settingsManager.getEnableSkillCommands(),
@@ -3706,6 +3712,14 @@ export class InteractiveMode {
 						for (const child of this.chatContainer.children) {
 							if (child instanceof ToolExecutionComponent) {
 								child.setShowImages(enabled);
+							}
+						}
+					},
+					onImageWidthCellsChange: (width) => {
+						this.settingsManager.setImageWidthCells(width);
+						for (const child of this.chatContainer.children) {
+							if (child instanceof ToolExecutionComponent) {
+								child.setImageWidthCells(width);
 							}
 						}
 					},
